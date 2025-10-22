@@ -1,0 +1,69 @@
+<div class="h-full w-full flex flex-col items-center justify-center p-4 sm:p-6 bg-slate-50 dark:bg-slate-900">
+  <div class="w-full max-w-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg p-6 sm:p-8 transition-all duration-500">
+    @if (!quizCompleted()) {
+      <div>
+        <div class="mb-6">
+          <p class="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">Question {{ currentQuestionIndex() + 1 }} of {{ questions().length }}</p>
+          <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2">
+            <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" [style.width.%]="progress()"></div>
+          </div>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-6">{{ currentQuestion().text }}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          @for (option of currentQuestion().options; track option) {
+            <button (click)="selectOption(option)"
+                    class="w-full p-4 rounded-md text-left transition-colors duration-200 border"
+                    [class.bg-blue-500]="currentQuestion().selection() === option"
+                    [class.text-white]="currentQuestion().selection() === option"
+                    [class.border-blue-500]="currentQuestion().selection() === option"
+                    [class.hover:bg-slate-100]="currentQuestion().selection() !== option"
+                    [class.dark:hover:bg-slate-800]="currentQuestion().selection() !== option"
+                    [class.bg-white]="currentQuestion().selection() !== option"
+                    [class.dark:bg-slate-900]="currentQuestion().selection() !== option"
+                    [class.border-slate-300]="currentQuestion().selection() !== option"
+                    [class.dark:border-slate-700]="currentQuestion().selection() !== option"
+            >
+              {{ option }}
+            </button>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-4">Quiz Completed!</h2>
+        <p class="text-slate-600 dark:text-slate-400 mb-6">Based on your responses, your result is:</p>
+        <div class="mb-6 p-6 rounded-lg"
+             [class.bg-green-50]="resultCategory() === 'Low'"
+             [class.dark:bg-green-500/10]="resultCategory() === 'Low'"
+             [class.bg-yellow-50]="resultCategory() === 'Moderate'"
+             [class.dark:bg-yellow-500/10]="resultCategory() === 'Moderate'"
+             [class.bg-red-50]="resultCategory() === 'High'"
+             [class.dark:bg-red-500/10]="resultCategory() === 'High'"
+        >
+          <p class="text-4xl font-extrabold"
+             [class.text-green-600]="resultCategory() === 'Low'"
+             [class.dark:text-green-400]="resultCategory() === 'Low'"
+             [class.text-yellow-600]="resultCategory() === 'Moderate'"
+             [class.dark:text-yellow-400]="resultCategory() === 'Moderate'"
+             [class.text-red-600]="resultCategory() === 'High'"
+             [class.dark:text-red-400]="resultCategory() === 'High'"
+          >{{ score() }} / 40</p>
+          <p class="text-lg font-semibold mt-1"
+             [class.text-green-800]="resultCategory() === 'Low'"
+             [class.dark:text-green-300]="resultCategory() === 'Low'"
+             [class.text-yellow-800]="resultCategory() === 'Moderate'"
+             [class.dark:text-yellow-300]="resultCategory() === 'Moderate'"
+             [class.text-red-800]="resultCategory() === 'High'"
+             [class.dark:text-red-300]="resultCategory() === 'High'"
+          >{{ resultCategory() }} Likelihood of ADHD Symptoms</p>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-500 mb-6">
+          <strong>Disclaimer:</strong> This is not a medical diagnosis. This tool is for informational purposes only. Please consult with a qualified healthcare professional for an accurate assessment.
+        </p>
+        <button (click)="resetQuiz()" class="px-6 py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
+          Take Again
+        </button>
+      </div>
+    }
+  </div>
+</div>
